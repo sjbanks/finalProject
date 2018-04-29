@@ -24,6 +24,10 @@ import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**This is my GUI file that creates the frame from which the program runs
+ * @author Steven BANKS
+ *
+ */
 public class finalGUI extends JFrame {
 
 	//global variables for certain controls on the frame
@@ -36,6 +40,20 @@ public class finalGUI extends JFrame {
 	private JTextField txtEmail;
 	private JCheckBox chkInsured;
 	private boolean insurance;
+	private EmergencyRoom newER = new EmergencyRoom();		//create a new queue
+	private EmergencyRoom ageSortedER = new EmergencyRoom(); //so that I don't lose the original sort order
+	private EmergencyRoom nameSortedER = new EmergencyRoom(); //so I don't lose the original sort order
+	//these are 'preset' patient objects that can be added automatically into the queue if need bes
+	private Patient geralt = new Patient("Geralt", "Rivian", 65, "O-", "stable", "killingmonster@lodge.com", false);
+	private Patient kara = new Patient("Kara", "Thrace", 25, "B+", "stable", "kthrace@BSG.com", true);
+	private Patient lee = new Patient("Lee", "Adama", 27, "A-", "unstable", "leeloveskara@hotmail.com", true);
+	private Patient harry = new Patient("Harry", "Potter", 38, "O+", "critical", "theboywholived@hogwarts.net", false);
+	private Patient kayleigh = new Patient("Kayleigh", "Carington", 30,"B-", "unstable", "mechanicLove@serenity.com", false);
+	private Patient stephen = new Patient("Stephen", "King", 63, "B-", "stable", "masterOfHorror@King.com", true);
+	private Patient al = new Patient("Weird", "Al", 55, "AB+", "unstable", "polkapolkapolka@weird.com", true);
+	private Patient zol = new Patient("Richard", "Zolnosky", 82, "A+", "critical", "rzol@gmail.com", true);
+	private Patient herbert = new Patient("Herbert", "Devin", 20, "B+", "stable", "herb2000@hotmail.com", false);
+	private Patient vader = new Patient("Darth", "Vader", 34, "B-", "unstable", "cometothedarkside@empire.com", false);
 
 	/**
 	 * Launch the application.
@@ -65,20 +83,20 @@ public class finalGUI extends JFrame {
 	 * This initializes all the components I will need on my frame
 	 */
 	private void startProgram() {
-		EmergencyRoom newER = new EmergencyRoom();	//make a new queue upon starting the program
 		
 		setTitle("Emergency Room Waiting List");		//Title of the frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//make sure to close when you hit the exit button
-		setBounds(100, 100, 450, 335);					//drag and drop!
+		setBounds(100, 100, 450, 365);					//drag and drop!
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{0, 0, 0};
-		gbl_contentPane.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
+		
 		//I'm gonna be honest, this doesn't mean a whole lot to me
 		//This code was automatically generated from windowBuilder
 		JLabel lblEnterPatientInformation = new JLabel("Enter Patient Information Below:");
@@ -232,6 +250,14 @@ public class finalGUI extends JFrame {
 				Patient newPatient = new Patient(fName, lName, age, blood, condition, email, insurance);	//create a new patient with the user information
 				newER.submit(newPatient);	//Add the new patient to the wait list
 				JOptionPane.showMessageDialog(null, lName + ", " + fName + " added to the waitlist");	//confirmation that patient was added
+				
+				txtFirstName.setText("");			//I found these all on my own, after putting the period after the variable
+				txtLastName.setText("");
+				txtAge.setText("");
+				txtBloodType.setText("");
+				txtCondition.setText("");
+				txtEmail.setText("");
+				
 			}
 		});
 		GridBagConstraints gbc_btnSubmit = new GridBagConstraints();
@@ -246,24 +272,61 @@ public class finalGUI extends JFrame {
 				newER.waitList();	//this prints the wait list when the button is clicked
 			}
 		});
+		
+		JButton btnAutoFill = new JButton("Auto Fill (10)");
+		btnAutoFill.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//add all of the premade patient objects to the queue
+				newER.submit(geralt);
+				newER.submit(kara);
+				newER.submit(al);
+				newER.submit(harry);
+				newER.submit(herbert);
+				newER.submit(kayleigh);
+				newER.submit(lee);
+				newER.submit(stephen);
+				newER.submit(vader);
+				newER.submit(zol);
+				//these are a big large, but can use the X at the top right just fine
+				JOptionPane.showMessageDialog(null, "Added " + geralt.toString() + kara.toString() + al.toString() + harry.toString() + herbert.toString());
+				JOptionPane.showMessageDialog(null, "Added " + kayleigh.toString() + lee.toString() + stephen.toString() + vader.toString() + zol.toString());
+			}
+		});
+		GridBagConstraints gbc_btnAutoFill = new GridBagConstraints();
+		gbc_btnAutoFill.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAutoFill.gridx = 1;
+		gbc_btnAutoFill.gridy = 8;
+		contentPane.add(btnAutoFill, gbc_btnAutoFill);
 		GridBagConstraints gbc_btnShowWaitList = new GridBagConstraints();
-		gbc_btnShowWaitList.insets = new Insets(0, 0, 5, 0);
-		gbc_btnShowWaitList.gridx = 1;
-		gbc_btnShowWaitList.gridy = 8;
+		gbc_btnShowWaitList.insets = new Insets(0, 0, 5, 5);
+		gbc_btnShowWaitList.gridx = 0;
+		gbc_btnShowWaitList.gridy = 9;
 		contentPane.add(btnShowWaitList, gbc_btnShowWaitList);
 		
 		JButton btnSortByLast = new JButton("Sort by Last Name");
+		btnSortByLast.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nameSortedER = newER;				//update new queue with patients
+				nameSortedER.sortByAlpha();			//Sort by last name, A-Z
+			}
+		});
 		GridBagConstraints gbc_btnSortByLast = new GridBagConstraints();
-		gbc_btnSortByLast.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSortByLast.gridx = 0;
+		gbc_btnSortByLast.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSortByLast.gridx = 1;
 		gbc_btnSortByLast.gridy = 9;
 		contentPane.add(btnSortByLast, gbc_btnSortByLast);
 		
 		JButton btnSortByAge = new JButton("Sort by Age");
+		btnSortByAge.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ageSortedER = newER;					//update new queue with patients
+				ageSortedER.sortByAge(); 				//Sort by age
+			}
+		});
 		GridBagConstraints gbc_btnSortByAge = new GridBagConstraints();
-		gbc_btnSortByAge.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSortByAge.gridx = 1;
-		gbc_btnSortByAge.gridy = 9;
+		gbc_btnSortByAge.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSortByAge.gridx = 0;
+		gbc_btnSortByAge.gridy = 10;
 		contentPane.add(btnSortByAge, gbc_btnSortByAge);
 		
 		JButton btnShowInsured = new JButton("Show Insured");
@@ -273,8 +336,8 @@ public class finalGUI extends JFrame {
 			}
 		});
 		GridBagConstraints gbc_btnShowInsured = new GridBagConstraints();
-		gbc_btnShowInsured.insets = new Insets(0, 0, 0, 5);
-		gbc_btnShowInsured.gridx = 0;
+		gbc_btnShowInsured.insets = new Insets(0, 0, 5, 0);
+		gbc_btnShowInsured.gridx = 1;
 		gbc_btnShowInsured.gridy = 10;
 		contentPane.add(btnShowInsured, gbc_btnShowInsured);
 		
@@ -285,9 +348,21 @@ public class finalGUI extends JFrame {
 			}
 		});
 		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
-		gbc_btnRemove.gridx = 1;
-		gbc_btnRemove.gridy = 10;
+		gbc_btnRemove.insets = new Insets(0, 0, 0, 5);
+		gbc_btnRemove.gridx = 0;
+		gbc_btnRemove.gridy = 11;
 		contentPane.add(btnRemove, gbc_btnRemove);
+		
+		JButton btnWaitTime = new JButton("Wait Time");
+		btnWaitTime.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newER.showCounter();	//prints wait time and wait list size
+			}
+		});
+		GridBagConstraints gbc_btnWaitTime = new GridBagConstraints();
+		gbc_btnWaitTime.gridx = 1;
+		gbc_btnWaitTime.gridy = 11;
+		contentPane.add(btnWaitTime, gbc_btnWaitTime);
 		
 	}
 
