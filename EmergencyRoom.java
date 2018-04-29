@@ -1,15 +1,20 @@
 package finalProject;
 
+import javax.swing.JOptionPane;
+
 /**
  * @author Steven BANKS
  *this is my queue class for my project. It is the waiting room list for an Emergency Room at a hospital
  */
 public class EmergencyRoom {
 	
-	private Link first;
-	private int counter;
-	private final int CAPACITY = 15;
+	private Link first;							//set the beginning of the queue
+	private int counter;						//keep track of how many patients are in the queue
+	private final int CAPACITY = 15;			//set a number for maximum capacity of the ER
+	private final int MINUTES_PER_PATIENT = 15;	//set an estimated time per patient
+	private int waitTime;						//initialize a variable that will store information later
 	
+	//default constructor calls a private method to instantiate the queue
 	public EmergencyRoom() {
 		newQueue();
 	}
@@ -50,16 +55,28 @@ public class EmergencyRoom {
 	public void insuredPatients() {
 		printInsured();
 	}
+	/**
+	 * shows how many patients are waiting and estimates a wait time
+	 */
 	public void showCounter() {
 		displayCounter();
 	}
+	/**
+	 * insertion sort by Last Name from A to Z
+	 */
 	public void sortByAlpha() {
 		alphaSort();
 	}
+	/**
+	 * insertion sort by age from youngest to oldest
+	 */
 	public void sortByAge() {
 		ageSort();
 	}
 	
+	/**
+	 * instantiates a new queue
+	 */
 	private void newQueue() {
 		first = null;
 		counter = 0;
@@ -97,13 +114,13 @@ public class EmergencyRoom {
 		if (!isEmpty()) {	//if the queue is not empty
 			Link temp = first; //set temp equal to the first value
 			first = first.next; //update the first value in the queue
-			System.out.print("This patient was seen by a doctor: "); //print the name of the patient removed from the queue
-			temp.displayName();
+			JOptionPane.showMessageDialog(null, "This patient was seen by a doctor: " + temp.patient.getLastName() + ", " + temp.patient.getFirstName()); //print the name of the patient removed from the queue
+			//temp.displayName();
 			counter--; //keep track of how many patients are in the queue
 			return temp;
 		}
 		else {
-			System.out.println("The waitlist is empty, everyone has been seen by a doctor."); //if queue is empty, tell user
+			JOptionPane.showMessageDialog(null, "The waitlist is empty, everyone has been seen by a doctor."); //if queue is empty, tell user
 			return null;
 		}
 		
@@ -121,7 +138,7 @@ public class EmergencyRoom {
 			}
 		}
 		else {
-			System.out.println("The wailist is empty.");
+			JOptionPane.showMessageDialog(null, "The wailist is empty.");
 		}
 	}
 	/**
@@ -145,13 +162,15 @@ public class EmergencyRoom {
 	 * simple method to display how many patients are on the waitlist
 	 */
 	private void displayCounter() {
-		System.out.println("\nThere are currently: " + counter + " patients on the wait list."); //I like starting it on a new line
+		waitTime = counter * MINUTES_PER_PATIENT;
+		JOptionPane.showMessageDialog(null, "There are currently: " + counter + " patients on the wait list."
+				+ "\nCurrent wait time is estimate to be: " + waitTime + " minutes."); 
 	}
 	/**
 	 * sorting algorithm to sort the list from youngest to oldest
 	 */
 	private void ageSort() {
-		System.out.println("\nSorting list by age of patient: ");	//keep the user informed as to what is happening
+		JOptionPane.showMessageDialog(null, "Sorting by patient age.");	//keep the user informed as to what is happening
 		Link current = first;	//temporary current value
 		Link tail = null;		//temporary tail value
 		
@@ -176,11 +195,11 @@ public class EmergencyRoom {
 	 * alphabetically by last name from A to Z
 	 */
 	private void alphaSort() {
-		System.out.println("Sorting list alphabetically: ");	//Just to show on the console what's happening
+		JOptionPane.showMessageDialog(null, "Sorting by patient last name.");	//Just to show on the console what's happening
 		Link current = first;	//create a temporary current value equal to the first value
 		Link tail = null;		//create a temporary tail value equal to null
 		
-		while (current != null && tail != first) {	//start a while loop that goes until current is null and tail is first			
+		while (current != null && tail != first) {									//start a while loop that goes until current is null and tail is first			
 			Link pointer = current;																		//create a pointer link that can reference ahead
 			for (; pointer.next != tail; pointer = pointer.next) {										//nested for loop that moves pointer ahead
 				if (pointer.patient.getLastName().compareTo(pointer.next.patient.getLastName()) > 0){	//if pointer's last name comes after pointer.next's last name	
